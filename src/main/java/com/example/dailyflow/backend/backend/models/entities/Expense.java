@@ -28,7 +28,7 @@ public class Expense {
     @Column(updatable = false)
     private LocalDate date;
 
-    @JsonFormat(pattern = "HH:mm:ss")
+    @JsonFormat(pattern = "HH:mm")
     @Column(updatable = false)
     private LocalTime time;
 

@@ -3,6 +3,7 @@ package com.example.dailyflow.backend.backend.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.dailyflow.backend.backend.models.dto.UserRegisterDTO;
 import com.example.dailyflow.backend.backend.models.entities.User;
 
 public interface UserService {
@@ -11,9 +12,9 @@ public interface UserService {
 
     Optional<User> findUserById(Long id);
 
-    User saveUser(User user);
+    User saveUser(UserRegisterDTO dto);
 
-    Optional<User> updateUser(User user, Long id);
+    Optional<User> updateUser(UserRegisterDTO dto, Long id);
 
     void removeUser(Long id);
 

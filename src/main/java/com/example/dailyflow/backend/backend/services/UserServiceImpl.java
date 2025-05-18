@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional(readOnly = true)
@@ -47,9 +51,11 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User saveUser(UserRegisterDTO dto) {
         User user = new User();
+        String passwordBc = passwordEncoder.encode(user.getPassword());
         user.setUsername(dto.getUsername());
         user.setPassword(dto.getPassword());
         user.setEmail(dto.getEmail());
+        user.setPassword(passwordBc);
 
         Set<Role> roleEntities = dto.getRoles().stream()
                 .map(roleName -> roleRepository.findByName(roleName)

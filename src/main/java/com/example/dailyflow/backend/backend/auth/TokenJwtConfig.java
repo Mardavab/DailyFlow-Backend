@@ -1,0 +1,11 @@
+package com.example.dailyflow.backend.backend.auth;
+
+import javax.crypto.SecretKey;
+
+import io.jsonwebtoken.Jwts;
+
+public class TokenJwtConfig {
+ public final static SecretKey SECRET_KEY = Jwts.SIG.HS256.key().build();
+    public final static String PREFIX_KEY = "Bearer ";
+    public final static String HEADER_AUTHORITATION = "Authorization";
+}

@@ -33,8 +33,7 @@ public class SpringSecurityConfiguration {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         return http.authorizeRequests()
-        .requestMatchers(HttpMethod.GET, "/users")
-        .permitAll().anyRequest().authenticated()
+        .requestMatchers(HttpMethod.GET, "/users").permitAll().anyRequest().authenticated()
         .and()
         .addFilter(new JwtAuthenticationFilter(authenticationConfiguration.getAuthenticationManager())) 
         .addFilter(new JwtValidationFilter(authenticationConfiguration.getAuthenticationManager())) 

@@ -49,3 +49,54 @@ Thumbs.db
 
 # Maven home path (your previous rule)
 mavenHomeManager.xml
+# ───── IDE-Specific Configs ─────
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+/workspace.xml
+/shelf/
+
+# VS Code
+.vscode/
+
+# Eclipse
+.project
+.classpath
+.settings/
+.metadata/
+
+# ───── Java Build Artifacts ─────
+*.class
+*.jar
+*.war
+*.ear
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# ───── Logs and Temp Files ─────
+*.log
+*.tmp
+*.bak
+*.swp
+*.orig
+
+# ───── OS Generated Files ─────
+.DS_Store
+Thumbs.db
+
+# Maven home path (your previous rule)
+mavenHomeManager.xml

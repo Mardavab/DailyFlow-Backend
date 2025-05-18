@@ -1,0 +1,23 @@
+[33mcommit c328b0c2f33cabdbf9e44602f86040d6fccbf5d2[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: Marlon Abella <mardavab@gmail.com>
+Date:   Sun May 18 03:42:01 2025 -0500
+
+    Se implemento Spring Security con JWT
+
+[33mcommit 0bcc706d38bf311ad3938a5c31c324797bb0e2b8[m
+Author: Marlon Abella <mardavab@gmail.com>
+Date:   Sat May 17 02:48:53 2025 -0500
+
+    Implementado roles en usuarios
+
+[33mcommit ded2c41d78b5a25e41609e16a20f103117f34f58[m
+Author: Marlon Abella <mardavab@gmail.com>
+Date:   Mon May 12 23:06:24 2025 -0500
+
+    Agregado el crud de Suppliers
+
+[33mcommit e4d59ff7a2bbbc2568d4f7ef5abf30e3646bf9e9[m
+Author: Marlon Abella <mardavab@gmail.com>
+Date:   Mon May 12 22:20:47 2025 -0500
+
+    Backend con gastos, productos y usuarios

@@ -3,18 +3,19 @@ package com.example.dailyflow.backend.backend.services;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.dailyflow.backend.backend.models.dto.UserRegisterDTO;
+import com.example.dailyflow.backend.backend.models.dto.UserDto;
 import com.example.dailyflow.backend.backend.models.entities.User;
+import com.example.dailyflow.backend.backend.models.request.UserRequest;
 
 public interface UserService {
 
-    List<User> findAllUsers();
+    List<UserDto> findAllUsers();
 
-    Optional<User> findUserById(Long id);
+    Optional<UserDto> findUserById(Long id);
 
-    User saveUser(UserRegisterDTO dto);
+    UserDto saveUser(User user);
 
-    Optional<User> updateUser(UserRegisterDTO dto, Long id);
+    Optional<UserDto> updateUser(UserRequest user, Long id);
 
     void removeUser(Long id);
 

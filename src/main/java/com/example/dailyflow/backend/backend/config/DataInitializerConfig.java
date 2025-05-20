@@ -12,15 +12,15 @@ public class DataInitializerConfig {
  @Bean
     CommandLineRunner initRoles(RoleRepository roleRepository) {
         return args -> {
-            if (roleRepository.findByName("USER").isEmpty()) {
+            if (roleRepository.findByName("ROLE_USER").isEmpty()) {
                 Role userRole = new Role();
-                userRole.setName("USER");
+                userRole.setName("ROLE_USER");
                 roleRepository.save(userRole);
             }
 
-            if (roleRepository.findByName("ADMIN").isEmpty()) {
+            if (roleRepository.findByName("ROLE_ADMIN").isEmpty()) {
                 Role adminRole = new Role();
-                adminRole.setName("ADMIN");
+                adminRole.setName("ROLE_ADMIN");
                 roleRepository.save(adminRole);
             }
         };

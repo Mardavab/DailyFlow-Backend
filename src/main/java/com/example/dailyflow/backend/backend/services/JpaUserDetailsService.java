@@ -1,8 +1,8 @@
 package com.example.dailyflow.backend.backend.services;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,21 +19,31 @@ import com.example.dailyflow.backend.backend.repositories.UserRepository;
 
 @Service
 public class JpaUserDetailsService implements UserDetailsService{
- @Autowired
-    private UserRepository userRepository;
+  @Autowired
+    private UserRepository repository;
+
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<com.example.dailyflow.backend.backend.models.entities.User> o = userRepository.findByUsername(username);
-       if (!o.isPresent()) {
-        throw new UsernameNotFoundException("username no existe");
-       }
-         com.example.dailyflow.backend.backend.models.entities.User user = o.orElseThrow();
+        Optional< com.example.dailyflow.backend.backend.models.entities.User> o = repository.getUserByUsername(username);
 
-       List<GrantedAuthority> authorities = new ArrayList<>();
-       authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        if (!o.isPresent()) {
+            throw new UsernameNotFoundException(String.format("Username %s no existe en el sistema!", username));
+        }
+        com.example.dailyflow.backend.backend.models.entities.User user = o.orElseThrow();
 
-       return new User(user.getUsername(), user.getPassword(), true, true, true, true, authorities);    
+        List<GrantedAuthority> authorities = user.getRoles().stream().map(r -> new SimpleGrantedAuthority(r.getName())).collect(Collectors.toList());
+
+        return new User(
+                user.getUsername(),
+                user.getPassword(),
+                true,
+                true,
+                true,
+                true,
+                authorities);
+
     }
+
 
 }

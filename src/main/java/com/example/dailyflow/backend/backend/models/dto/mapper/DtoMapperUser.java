@@ -9,9 +9,7 @@ public class DtoMapperUser {
 
     private User user;
 
-    private DtoMapperUser() {
-
-    }
+    private DtoMapperUser() {}
 
     public static DtoMapperUser builder() {
         mapper = new DtoMapperUser();
@@ -27,8 +25,17 @@ public class DtoMapperUser {
         if (user == null) {
             throw new RuntimeException("Debe pasar la entidad");
         }
-        return new UserDto(this.user.getId(), user.getEmail(), user.getUsername());
-
+        // Toma el primer rol, si hay (ajusta si quieres la lista)
+        String role = null;
+        if (user.getRoles() != null && !user.getRoles().isEmpty()) {
+            role = user.getRoles().get(0).getName();
+        }
+        return new UserDto(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getDate(),
+                role
+        );
     }
-
 }

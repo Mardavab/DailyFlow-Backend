@@ -1,5 +1,6 @@
 package com.example.dailyflow.backend.backend.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -12,6 +13,7 @@ public class SaleDetail {
 
     @ManyToOne
     @JoinColumn(name = "sale_id")
+    @JsonBackReference
     private Sale sale;
 
     @ManyToOne

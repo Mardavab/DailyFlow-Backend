@@ -55,14 +55,25 @@ public class UserServiceImpl implements UserService {
     public UserDto saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        Optional<Role> o = RoleRepository.findByName("ROLE_USER");
+        // Usa los roles que vienen en el usuario (del frontend)
         List<Role> roles = new ArrayList<>();
-        if (o.isPresent()) {
-            roles.add(o.orElseThrow());
-
+        if (user.getRoles() != null && !user.getRoles().isEmpty()) {
+            // Cargar desde la base los roles por id para evitar detached entities
+            for (Role role : user.getRoles()) {
+                Role managedRole = RoleRepository.findById(role.getId())
+                        .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+                roles.add(managedRole);
+            }
+        } else {
+            // Si no viene ninguno, pon por defecto ROLE_USER (opcional)
+            Optional<Role> o = RoleRepository.findByName("ROLE_USER");
+            if (o.isPresent()) {
+                roles.add(o.get());
+            }
         }
         user.setRoles(roles);
-        return  DtoMapperUser.builder().setUser(repository.save(user)).build() ;
+
+        return DtoMapperUser.builder().setUser(repository.save(user)).build();
     }
 
     @Override
@@ -74,11 +85,23 @@ public class UserServiceImpl implements UserService {
             User userDb = o.orElseThrow();
             userDb.setUsername(user.getUsername());
             userDb.setEmail(user.getEmail());
+
+            // Aquí agregas la lógica para actualizar roles
+            List<Role> roles = new ArrayList<>();
+            if (user.getRoles() != null && !user.getRoles().isEmpty()) {
+                for (Role role : user.getRoles()) {
+                    Role managedRole = RoleRepository.findById(role.getId())
+                            .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+                    roles.add(managedRole);
+                }
+                userDb.setRoles(roles);
+            }
+            // Si no envías roles en el update puedes decidir si los mantienes igual, los dejas vacíos, o pones uno por defecto
+
             userOptional = repository.save(userDb);
         }
-        return Optional.ofNullable(DtoMapperUser.builder().setUser(repository.save(userOptional)).build());
+        return Optional.ofNullable(DtoMapperUser.builder().setUser(userOptional).build());
     }
-
     @Override
     @Transactional
     public void removeUser(Long id) {

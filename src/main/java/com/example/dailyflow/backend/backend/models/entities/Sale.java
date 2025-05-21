@@ -1,5 +1,6 @@
 package com.example.dailyflow.backend.backend.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,11 +18,14 @@ public class Sale {
 
     private String paymentMethod;
 
+    private String source;
+
     private LocalDate date;
 
     private LocalTime time;
 
-    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<SaleDetail> details;
 
     // Getters & Setters

@@ -8,7 +8,7 @@ public class UserDto {
     private String username;
     private String email;
     private LocalDate date;
-    private String role; // Si tienes varios roles, puedes cambiar a List<String> roles
+    private String role; 
 
     public UserDto() {}
 
@@ -19,8 +19,6 @@ public class UserDto {
         this.date = date;
         this.role = role;
     }
-
-    // Getters y setters
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

@@ -6,6 +6,7 @@ import com.example.dailyflow.backend.backend.models.entities.*;
 import com.example.dailyflow.backend.backend.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -21,6 +22,7 @@ public class SaleService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Transactional
     public Sale registerSale(SaleDTO saleDTO) {
         Sale sale = new Sale();
         sale.setPaymentMethod(saleDTO.getPaymentMethod());
@@ -45,9 +47,14 @@ public class SaleService {
             detail.setProduct(product);
             detail.setQuantity(detailDTO.getQuantity());
             detail.setSale(sale);
-
             detailList.add(detail);
-            total += product.getPrice() * detailDTO.getQuantity();
+
+            total += product.getSalePrice() * detailDTO.getQuantity();
+
+            System.out.println("🧮 Stock actual: " + product.getStock());
+            System.out.println("🧾 Restando cantidad: " + detailDTO.getQuantity());
+            System.out.println("💾 Nuevo stock: " + (product.getStock() - detailDTO.getQuantity()));
+
         }
 
         sale.setAmount(total);
@@ -56,23 +63,20 @@ public class SaleService {
         return saleRepository.save(sale);
     }
 
-    // ✅ Get all sales
     public List<Sale> getAllSales() {
         return saleRepository.findAll();
     }
 
-    // ✅ Get sale by ID
     public Sale getSaleById(Long id) {
         return saleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sale not found with ID: " + id));
     }
 
-    // ✅ Update sale
+    @Transactional
     public Sale updateSale(Long id, SaleDTO saleDTO) {
         Sale existingSale = saleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sale not found with ID: " + id));
 
-        // Restore previous stock
         for (SaleDetail detail : existingSale.getDetails()) {
             Product product = detail.getProduct();
             product.setStock(product.getStock() + detail.getQuantity());
@@ -101,19 +105,21 @@ public class SaleService {
             newDetail.setSale(existingSale);
 
             updatedDetails.add(newDetail);
-            newTotal += product.getPrice() * detailDTO.getQuantity();
+            newTotal += product.getSalePrice() * detailDTO.getQuantity();
         }
 
-        existingSale.setDetails(updatedDetails);
+        existingSale.getDetails().addAll(updatedDetails);
+
         existingSale.setAmount(newTotal);
         existingSale.setPaymentMethod(saleDTO.getPaymentMethod());
         existingSale.setDate(LocalDate.now());
         existingSale.setTime(LocalTime.now());
 
         return saleRepository.save(existingSale);
+
     }
 
-    // ✅ Delete sale and restore stock
+    @Transactional
     public void deleteSale(Long id) {
         Sale sale = saleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sale not found with ID: " + id));

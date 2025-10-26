@@ -12,7 +12,8 @@ import com.example.dailyflow.backend.backend.repositories.ProductRepository;
 
 @Service
 public class ProductServiceImpl implements ProductService {
- @Autowired
+
+    @Autowired
     private ProductRepository repository;
 
     @Override
@@ -31,7 +32,6 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public void removeProduct(Long id) {
         repository.deleteById(id);
-
     }
 
     @Override
@@ -41,16 +41,24 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Optional<Product> updateProduct(Product product, Long id){
-        Optional<Product> o = findProductById(id);
-        if (o.isPresent()) {
-            Product productDb = o.orElseThrow();
+    @Transactional
+    public Optional<Product> updateProduct(Product product, Long id) {
+        Optional<Product> optionalProduct = findProductById(id);
+
+        if (optionalProduct.isPresent()) {
+            Product productDb = optionalProduct.get();
+
+            productDb.setCode(product.getCode());
+            productDb.setBrand(product.getBrand());
             productDb.setName(product.getName());
-            productDb.setPrice(product.getPrice());
+            productDb.setPurchasePrice(product.getPurchasePrice());
+            productDb.setSalePrice(product.getSalePrice());
             productDb.setStock(product.getStock());
             productDb.setSize(product.getSize());
+
             return Optional.of(this.saveProduct(productDb));
         }
+
         return Optional.empty();
     }
 }

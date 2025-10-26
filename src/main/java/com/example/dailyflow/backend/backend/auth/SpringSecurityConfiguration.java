@@ -1,6 +1,7 @@
 package com.example.dailyflow.backend.backend.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -37,10 +38,14 @@ public class SpringSecurityConfiguration {
     }
 
     // BEAN para configurar CORS correctamente
+
+    @Value("${frontend.url}")
+    private String frontendUrl;
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        config.setAllowedOrigins(List.of(frontendUrl));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
@@ -51,18 +56,20 @@ public class SpringSecurityConfiguration {
     }
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         return http
                 .cors().and()
-                .authorizeHttpRequests()
-                .requestMatchers("/users/**", "/expense/**", "/product/**", "/suppliers/**","/sales/**").hasAnyRole("USER", "ADMIN")
-                .requestMatchers("/security/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
-                .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationConfiguration.getAuthenticationManager()))
-                .addFilter(new JwtValidationFilter(authenticationConfiguration.getAuthenticationManager()))
-                .csrf(config -> config.disable())
-                .sessionManagement(managment -> managment.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/users/**", "/expense/**", "/products/**", "/suppliers/**", "/sales/**")
+                        .hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/security/**").hasRole("ADMIN")
+                        .anyRequest().authenticated())
+                .addFilter(new JwtAuthenticationFilter(authenticationManager))
+                .addFilter(new JwtValidationFilter(authenticationManager))
+                .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
+
 }

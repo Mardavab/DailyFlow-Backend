@@ -15,20 +15,23 @@ public class Sale {
     private Long id;
 
     private Double amount;
-
     private String paymentMethod;
-
+    private LocalDate date;
+    private LocalTime time;
     private String source;
 
-    private LocalDate date;
-
-    private LocalTime time;
-
-    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<SaleDetail> details;
 
-    // Getters & Setters
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
     public Long getId() {
         return id;
     }

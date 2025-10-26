@@ -100,3 +100,5 @@ Thumbs.db
 
 # Maven home path (your previous rule)
 mavenHomeManager.xml
+
+.env

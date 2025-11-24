@@ -51,10 +51,6 @@ public class SaleService {
 
             total += product.getSalePrice() * detailDTO.getQuantity();
 
-            System.out.println("🧮 Stock actual: " + product.getStock());
-            System.out.println("🧾 Restando cantidad: " + detailDTO.getQuantity());
-            System.out.println("💾 Nuevo stock: " + (product.getStock() - detailDTO.getQuantity()));
-
         }
 
         sale.setAmount(total);
